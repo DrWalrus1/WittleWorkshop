@@ -1,41 +1,40 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
+use rocket::serde::{json::Json, Deserialize, Serialize};
 use std::fmt;
-use std::fmt::{Formatter};
-use rocket::serde::{Serialize, Deserialize, json::Json};
+use std::fmt::Formatter;
 
 #[derive(Serialize, Deserialize)]
 enum ContainerCommand {
     Start,
-    Stop
+    Stop,
 }
 
 impl fmt::Display for ContainerCommand {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             ContainerCommand::Start => write!(f, "Start"),
-            ContainerCommand::Stop => write!(f, "Stop")
+            ContainerCommand::Stop => write!(f, "Stop"),
         }
     }
 }
 
 #[derive(Serialize, Deserialize)]
 struct ContainerRequest {
-    command: ContainerCommand
+    command: ContainerCommand,
 }
 
 #[derive(Serialize, Deserialize)]
 struct ContainerResponse {
-    result: String
+    result: String,
 }
-
 
 #[post("/container", data = "<container_request>")]
 fn hello(container_request: Json<ContainerRequest>) -> Json<ContainerResponse> {
-    let result = ContainerResponse {
-        result: container_request.command.to_string()
-    };
-    return Json::from(result);
+    return Json::from(ContainerResponse {
+        result: container_request.command.to_string(),
+    });
 }
 
 #[launch]
