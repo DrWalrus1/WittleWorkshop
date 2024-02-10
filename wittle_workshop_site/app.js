@@ -9,7 +9,7 @@ async function CallContainerApi(command) {
                 "Access-Control-Allow-Headers": "*"
             },
             body: JSON.stringify({
-                command: "Start"
+                command: command
             })
         }).then(function (result) {
             return result;
