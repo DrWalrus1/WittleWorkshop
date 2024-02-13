@@ -16,26 +16,18 @@ pub enum ContainerCommand {
 
 impl CommandHandler<String> for ContainerCommand {
     fn execute(&self) -> Result<String, Error> {
-        let result = match self {
-            ContainerCommand::Start => {
+        let command = format!("echo {}", self.to_string());
+        let result =
                 Command::new("cmd")
-                    .args(["/C", "echo Start"])
-                    .output().unwrap()
-            },
-            ContainerCommand::Stop => {
-                Command::new("cmd")
-                    .args(["/C", "echo Stop"])
-                    .output().unwrap()
-            },
-        };
+                    .args(["/C", &command])
+                    .output().unwrap();
 
-        Ok(String::from_utf8(result.stdout).unwrap())
+        Ok(String::from_utf8(result.stdout).unwrap().trim().to_string())
     }
 }
 
 impl fmt::Display for ContainerCommand {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        dbg!(self.execute().unwrap());
         match self {
             ContainerCommand::Start => write!(f, "Start"),
             ContainerCommand::Stop => write!(f, "Stop"),
