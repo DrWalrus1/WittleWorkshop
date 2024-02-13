@@ -1,5 +1,5 @@
 use rocket::serde::json::Json;
-use crate::commands::docker_commands::{ContainerRequest, ContainerResponse};
+use crate::models::api_bodies::{ContainerRequest, ContainerResponse};
 
 #[post("/container", data = "<container_request>")]
 pub fn container(container_request: Json<ContainerRequest>) -> Json<ContainerResponse> {
