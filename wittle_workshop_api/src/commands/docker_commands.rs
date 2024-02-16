@@ -21,7 +21,6 @@ impl CommandHandler<String> for ContainerCommand {
                 Command::new("cmd")
                     .args(["/C", &command])
                     .output().unwrap();
-
         Ok(String::from_utf8(result.stdout).unwrap().trim().to_string())
     }
 }
