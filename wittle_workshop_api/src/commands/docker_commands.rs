@@ -14,6 +14,16 @@ pub enum ContainerCommand {
     Stop,
 }
 
+macro_rules! any_os_command {
+    ($command:expr) => {
+        #[cfg(target_family = "unix")]
+        {
+
+        };
+        #[cfg(target_family = "windows")]
+    };
+}
+
 impl CommandHandler<String> for ContainerCommand {
     fn execute(&self) -> Result<String, Error> {
         let command = format!("echo {}", self.to_string());
