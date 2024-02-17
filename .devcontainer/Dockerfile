@@ -1,4 +1,4 @@
-FROM node
+FROM ubuntu
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -21,6 +21,10 @@ ENV OPENSSL_LIB_DIR=/usr/local/ssl/lib \
 RUN curl https://sh.rustup.rs -sSf | \
     sh -s -- -y
 
+RUN curl -sSL https://deb.nodesource.com/setup_21.x | bash -
+RUN apt-get -y install nodejs
+RUN apt-get -y install git
+    
 ENV PATH=/root/.cargo/bin:$PATH
 ENV USER root
 RUN npm install -g neon-cli
