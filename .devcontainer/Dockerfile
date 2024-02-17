@@ -27,6 +27,7 @@ RUN apt-get -y install git
     
 ENV PATH=/root/.cargo/bin:$PATH
 ENV USER root
+EXPOSE 8000
 RUN npm install -g neon-cli
 WORKDIR /source
 
