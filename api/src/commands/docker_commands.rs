@@ -13,10 +13,24 @@ pub enum ContainerCommand {
     Start,
     Stop,
 }
+
+#[cfg(target_family = "unix")]
 impl CommandHandler<String> for ContainerCommand {
     fn execute(&self) -> Result<String, Error> {
         let string = format!("{}", self.to_string());
         let result = Command::new("echo").arg(string).output().unwrap();
+
+        Ok(String::from_utf8(result.stdout).unwrap().trim().to_string())
+    }
+}
+
+#[cfg(target_family = "windows")]
+impl CommandHandler<String> for ContainerCommand {
+    fn execute(&self) -> Result<String, Error> {
+        let string = format!("{}", self.to_string());
+        let result = Command::new("cmd")
+            .args(["/C", "echo", &string])
+            .output().unwrap();
 
         Ok(String::from_utf8(result.stdout).unwrap().trim().to_string())
     }
