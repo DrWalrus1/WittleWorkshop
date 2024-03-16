@@ -5,8 +5,8 @@ use rocket::http::{Header, Method, Status};
 use rocket::{Request, Response};
 
 pub mod commands;
-pub mod routes;
 pub mod models;
+pub mod routes;
 
 pub struct CORS;
 
@@ -28,18 +28,18 @@ impl Fairing for CORS {
             ));
             response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
         }
-        response.set_header(Header::new(
-            "Access-Control-Allow-Origin",
-            "*",
-        ));
+        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
         response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
     }
 }
 
-
-
 #[launch]
 fn rocket() -> _ {
-    rocket::build().attach(CORS)
-        .mount("/", routes![routes::docker_routes::container])
+    rocket::build().attach(CORS).mount(
+        "/docker/container",
+        routes![
+            routes::docker_routes::docker_container_routes::get_containers,
+            routes::docker_routes::docker_container_routes::do_something_else
+        ],
+    )
 }

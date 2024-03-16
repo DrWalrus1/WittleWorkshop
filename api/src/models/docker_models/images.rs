@@ -1,11 +1,5 @@
 use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
-
-// #[derive(Serialize, Deserialize, Debug)]
-// pub struct ListImages {
-//     pub images: Vec<Image>
-// }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]

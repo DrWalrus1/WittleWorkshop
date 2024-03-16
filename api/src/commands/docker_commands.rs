@@ -5,8 +5,9 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::process::Command;
 
+#[async_trait]
 pub trait CommandHandler<T> {
-    fn execute(&self) -> Result<T, Error>;
+    async fn execute(&self) -> Result<T, Error>;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -16,31 +17,22 @@ pub enum ContainerCommand {
 }
 
 #[cfg(target_family = "windows")]
+#[async_trait]
 impl CommandHandler<String> for ContainerCommand {
-    fn execute(&self) -> Result<String, Error> {
-        let result = Command::new("cmd")
-            .args([
-                "/C",
-                "curl",
-                "-X",
-                "GET",
-                "http://127.0.0.1:2375/images/json",
-            ])
-            .output()
-            .unwrap();
-        let parsed_result: Result<Vec<Image>, serde_json::Error> =
-            serde_json::from_str(&String::from_utf8(result.stdout.clone()).unwrap());
+    async fn execute(&self) -> Result<String, Error> {
+        let result = reqwest::get("http://127.0.0.1:2375/images/json").await.expect("Failed to call api").text_with_charset("utf-8").await.expect("Failed to get text");
+
+        let parsed_result: Result<Vec<Image>, serde_json::Error> = serde_json::from_str(&result);
         match parsed_result {
-            Ok(list_of_images) => {
+            Ok(_) => {
                 println!("IS OK!");
-                dbg!(list_of_images);
-            },
+            }
             Err(error) => {
-                println!("Something went wrong bro");
+                println!("Something went wrong");
                 println!("{}", error);
             }
         }
-        Ok(String::from_utf8(result.stdout).unwrap().trim().to_string())
+        Ok(result)
     }
 }
 
