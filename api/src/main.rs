@@ -41,5 +41,5 @@ impl Fairing for CORS {
 #[launch]
 fn rocket() -> _ {
     rocket::build().attach(CORS)
-        .mount("/", routes![routes::container_routes::container])
+        .mount("/", routes![routes::docker_routes::container])
 }
