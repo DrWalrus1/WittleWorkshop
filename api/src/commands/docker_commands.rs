@@ -3,11 +3,10 @@ use crate::models::errors::Error;
 use rocket::serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
-use std::process::Command;
+use std::future::Future;
 
-#[async_trait]
 pub trait CommandHandler<T> {
-    async fn execute(&self) -> Result<T, Error>;
+    fn execute(&self) -> impl Future<Output = Result<T, Error>> + Send;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -16,8 +15,6 @@ pub enum ContainerCommand {
     Stop,
 }
 
-#[cfg(target_family = "windows")]
-#[async_trait]
 impl CommandHandler<String> for ContainerCommand {
     async fn execute(&self) -> Result<String, Error> {
         let result = reqwest::get("http://127.0.0.1:2375/images/json").await.expect("Failed to call api").text_with_charset("utf-8").await.expect("Failed to get text");
