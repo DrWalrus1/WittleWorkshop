@@ -5,9 +5,6 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::future::Future;
 
-pub trait CommandHandler<T> {
-    fn execute(&self) -> impl Future<Output = Result<T, Error>> + Send;
-}
 
 #[derive(Serialize, Deserialize)]
 pub enum DockerImagesCommand {
@@ -15,9 +12,13 @@ pub enum DockerImagesCommand {
     Stop,
 }
 
-impl CommandHandler<Vec<Image>> for DockerImagesCommand {
-    async fn execute(&self) -> Result<Vec<Image>, Error> {
-        let response = match reqwest::get("http://127.0.0.1:2375/images/json").await {
+
+pub struct DockerService;
+
+impl DockerService {
+    // Windows implementation
+    async fn get_images() -> Result<reqwest::Response, Error> {
+        match reqwest::get("http://127.0.0.1:2375/images/json").await {
             Err(_) => {
                 return Err(Error {
                     code: String::from("ERROR"),
@@ -25,7 +26,20 @@ impl CommandHandler<Vec<Image>> for DockerImagesCommand {
                     detail: String::from("This is the detail"),
                 })
             }
+            Ok(response) => return Ok(response)
+        };
+    }
+}
+
+pub trait CommandHandler<T> {
+    fn execute(&self) -> impl Future<Output = Result<T, Error>> + Send;
+}
+
+impl CommandHandler<Vec<Image>> for DockerImagesCommand {
+    async fn execute(&self) -> Result<Vec<Image>, Error> {
+        let response = match DockerService::get_images().await {
             Ok(response) => response,
+            Err(error) => return Err(error),
         };
         let response_text = match response.text().await {
             Err(_) => {
