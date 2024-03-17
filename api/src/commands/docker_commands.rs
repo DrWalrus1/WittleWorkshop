@@ -10,34 +10,55 @@ pub trait CommandHandler<T> {
 }
 
 #[derive(Serialize, Deserialize)]
-pub enum ContainerCommand {
+pub enum DockerImagesCommand {
     Start,
     Stop,
 }
 
-impl CommandHandler<String> for ContainerCommand {
-    async fn execute(&self) -> Result<String, Error> {
-        let result = reqwest::get("http://127.0.0.1:2375/images/json").await.expect("Failed to call api").text_with_charset("utf-8").await.expect("Failed to get text");
+impl CommandHandler<Vec<Image>> for DockerImagesCommand {
+    async fn execute(&self) -> Result<Vec<Image>, Error> {
+        let response = match reqwest::get("http://127.0.0.1:2375/images/json").await {
+            Err(_) => {
+                return Err(Error {
+                    code: String::from("ERROR"),
+                    message: String::from("This is the message"),
+                    detail: String::from("This is the detail"),
+                })
+            }
+            Ok(response) => response,
+        };
+        let response_text = match response.text().await {
+            Err(_) => {
+                return Err(Error {
+                    code: String::from("ERROR"),
+                    message: String::from("Failed to read response text"),
+                    detail: String::from("Failed to read response text"),
+                })
+            }
+            Ok(response_text) => response_text,
+        };
 
-        let parsed_result: Result<Vec<Image>, serde_json::Error> = serde_json::from_str(&result);
-        match parsed_result {
-            Ok(_) => {
-                println!("IS OK!");
-            }
+        let parsed_result: Vec<Image> = match serde_json::from_str(&response_text) {
+            Ok(parsed_result) => parsed_result,
             Err(error) => {
-                println!("Something went wrong");
-                println!("{}", error);
+                eprintln!("Something went wrong");
+                eprintln!("{}", error);
+                return Err(Error {
+                    code: String::from("ERROR"),
+                    message: String::from("Failed to parse JSON"),
+                    detail: String::from("Failed to parse JSON"),
+                })
             }
-        }
-        Ok(result)
+        };
+        Ok(parsed_result)
     }
 }
 
-impl fmt::Display for ContainerCommand {
+impl fmt::Display for DockerImagesCommand {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            ContainerCommand::Start => write!(f, "Start"),
-            ContainerCommand::Stop => write!(f, "Stop"),
+            DockerImagesCommand::Start => write!(f, "Start"),
+            DockerImagesCommand::Stop => write!(f, "Stop"),
         }
     }
 }

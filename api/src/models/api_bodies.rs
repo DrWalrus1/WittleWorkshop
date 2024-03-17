@@ -1,6 +1,8 @@
 use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
-use crate::commands::docker_commands::ContainerCommand;
+use crate::commands::docker_commands::DockerImagesCommand;
+
+use super::docker_models::images::Image;
 
 #[derive(Responder)]
 pub enum ApiResponse<T> {
@@ -12,13 +14,13 @@ pub enum ApiResponse<T> {
 
 #[derive(Serialize, Deserialize)]
 pub struct ContainerRequest {
-    pub command: ContainerCommand,
+    pub command: DockerImagesCommand,
 }
 
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct ContainerResponse {
-    pub result: String,
+pub struct DockerImagesResponse {
+    pub images: Vec<Image>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
