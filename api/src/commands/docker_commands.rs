@@ -1,3 +1,4 @@
+use crate::services::docker_service::DockerService;
 use crate::models::docker_models::images::Image;
 use crate::models::errors::Error;
 use rocket::serde::{Deserialize, Serialize};
@@ -12,32 +13,13 @@ pub enum DockerImagesCommand {
     Stop,
 }
 
-
-pub struct DockerService;
-
-impl DockerService {
-    // Windows implementation
-    async fn get_images() -> Result<reqwest::Response, Error> {
-        match reqwest::get("http://127.0.0.1:2375/images/json").await {
-            Err(_) => {
-                return Err(Error {
-                    code: String::from("ERROR"),
-                    message: String::from("This is the message"),
-                    detail: String::from("This is the detail"),
-                })
-            }
-            Ok(response) => return Ok(response)
-        };
-    }
-}
-
 pub trait CommandHandler<T> {
-    fn execute(&self) -> impl Future<Output = Result<T, Error>> + Send;
+    fn execute(&self, docker_service: &impl DockerService) -> impl Future<Output = Result<T, Error>> + Send;
 }
 
 impl CommandHandler<Vec<Image>> for DockerImagesCommand {
-    async fn execute(&self) -> Result<Vec<Image>, Error> {
-        let response = match DockerService::get_images().await {
+    async fn execute(&self, docker_service: &impl DockerService) -> Result<Vec<Image>, Error> {
+        let response = match docker_service.get_images().await {
             Ok(response) => response,
             Err(error) => return Err(error),
         };

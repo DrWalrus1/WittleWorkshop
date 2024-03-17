@@ -7,6 +7,7 @@ use rocket::{Request, Response};
 pub mod commands;
 pub mod models;
 pub mod routes;
+pub mod services;
 
 pub struct CORS;
 
