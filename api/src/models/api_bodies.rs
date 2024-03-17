@@ -1,6 +1,5 @@
 use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
-use crate::commands::docker_commands::DockerImagesCommand;
 
 use super::docker_models::images::Image;
 
@@ -9,18 +8,15 @@ pub enum ApiResponse<T> {
     #[response(status = 200, content_type = "json")]
     Ok(Json<T>),
     #[response(status = 400, content_type = "json")]
-    BadRequest(Json<T>)
+    BadRequest(Json<T>),
+    #[response(status = 500, content_type = "json")]
+    ServerError(Json<T>)
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct ContainerRequest {
-    pub command: DockerImagesCommand,
-}
-
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct DockerImagesResponse {
-    pub images: Vec<Image>,
+pub enum ApiImageResponse {
+    Images(Vec<Image>),
+    Error(String)
 }
 
 #[derive(Serialize, Deserialize, Debug)]

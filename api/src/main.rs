@@ -4,7 +4,6 @@ use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::{Request, Response};
 
-pub mod commands;
 pub mod models;
 pub mod routes;
 pub mod services;
@@ -40,7 +39,7 @@ fn rocket() -> _ {
     .mount(
         "/docker/images",
         routes![
-            routes::docker_routes::docker_container_routes::get_containers
+            routes::docker_routes::docker_container_routes::get_images
         ],
     )
     .mount(

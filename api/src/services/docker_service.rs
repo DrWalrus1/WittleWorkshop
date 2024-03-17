@@ -1,5 +1,6 @@
 use crate::models::errors::Error;
 
+// TODO: MAKE THIS WORK FOR LINUX!
 pub async fn get_images_windows() -> Result<reqwest::Response, Error> {
     match reqwest::get("http://127.0.0.1:2375/images/json").await {
         Err(_) => {
