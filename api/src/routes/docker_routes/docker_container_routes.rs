@@ -1,5 +1,4 @@
 use crate::commands::docker_commands::CommandHandler;
-use crate::services::docker_service::WindowsDockerService;
 use crate::models::api_bodies::{ContainerRequest, DockerImagesResponse, ApiResponse};
 use rocket::serde::json::Json;
 
@@ -15,10 +14,9 @@ pub async fn get_containers(payload: String) -> ApiResponse<DockerImagesResponse
             return ApiResponse::BadRequest(Json::from(result))
         },
     };
-    let docker_service = WindowsDockerService;
-    let _ = container_request.command.execute(&docker_service).await;
+    let _ = container_request.command.execute().await;
     let result: DockerImagesResponse = DockerImagesResponse {
-        images: container_request.command.execute(&docker_service).await.unwrap(),
+        images: container_request.command.execute().await.unwrap(),
     };
     ApiResponse::Ok(Json::from(result))
 }

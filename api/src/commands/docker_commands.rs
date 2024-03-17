@@ -1,6 +1,6 @@
-use crate::services::docker_service::DockerService;
 use crate::models::docker_models::images::Image;
 use crate::models::errors::Error;
+use crate::services::docker_service;
 use rocket::serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
@@ -14,12 +14,12 @@ pub enum DockerImagesCommand {
 }
 
 pub trait CommandHandler<T> {
-    fn execute(&self, docker_service: &impl DockerService) -> impl Future<Output = Result<T, Error>> + Send;
+    fn execute(&self) -> impl Future<Output = Result<T, Error>> + Send;
 }
 
 impl CommandHandler<Vec<Image>> for DockerImagesCommand {
-    async fn execute(&self, docker_service: &impl DockerService) -> Result<Vec<Image>, Error> {
-        let response = match docker_service.get_images().await {
+    async fn execute(&self) -> Result<Vec<Image>, Error> {
+        let response = match docker_service::get_images_windows().await {
             Ok(response) => response,
             Err(error) => return Err(error),
         };
