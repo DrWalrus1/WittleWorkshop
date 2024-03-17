@@ -1,15 +1,6 @@
 use crate::commands::docker_commands::CommandHandler;
-use crate::models::api_bodies::{ContainerRequest, ContainerResponse};
+use crate::models::api_bodies::{ContainerRequest, ContainerResponse, ApiResponse};
 use rocket::serde::json::Json;
-
-#[derive(Responder)]
-pub enum ApiResponse<T> {
-    #[response(status = 200, content_type = "json")]
-    Ok(Json<T>),
-    #[response(status = 400, content_type = "json")]
-    BadRequest(Json<T>)
-}
-
 
 #[post("/get", format = "json", data = "<payload>")]
 pub async fn get_containers(payload: String) -> ApiResponse<ContainerResponse> {

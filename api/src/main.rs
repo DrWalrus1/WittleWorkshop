@@ -35,11 +35,18 @@ impl Fairing for CORS {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().attach(CORS).mount(
+    rocket::build().attach(CORS)
+    .mount(
         "/docker/container",
         routes![
             routes::docker_routes::docker_container_routes::get_containers,
             routes::docker_routes::docker_container_routes::do_something_else
         ],
+    )
+    .mount(
+        "/services",
+        routes![
+            routes::service_routes::get_all_services
+        ]
     )
 }
