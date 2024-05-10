@@ -1,0 +1,27 @@
+{
+    "name": "vite-template-solid",
+    "type": "module",
+    "version": "0.0.0",
+    "description": "",
+    "scripts": {
+        "start": "vite",
+        "dev": "vite",
+        "test": "npx vitest",
+        "build": "vite build",
+        "serve": "vite preview"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^20.12.10",
+        "jsdom": "^24.0.0",
+        "solid-devtools": "^0.29.2",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.11",
+        "vite-plugin-solid": "^2.8.2",
+        "vitest": "^1.6.0"
+    },
+    "dependencies": {
+        "@solidjs/router": "^0.13.1",
+        "solid-js": "^1.8.11"
+    }
+}
