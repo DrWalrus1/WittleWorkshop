@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: aquamarine;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+.core {
+    margin-top: 70px;
+}
+
+.navbar {
+    font-family: 'Roboto', sans-serif;
+    position: fixed;
+    justify-content: space-between;
+    display: flex;
+    top: 0;
+    height: 70px;
+    width: 100%;
+    z-index: 1;
+    background-color: rgb(255, 166, 0);
+}
+
+.navbarItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-wrap: nowrap;
+    width: 100%;
+}
+
+.navbar h1 {
+    float: left;
+    color: white;
+    margin-left: 20px;
+    width: 100%;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: black;
+}
+
+.navbarlogo {
+    display: inherit;
+    color: inherit;
+    padding: inherit;
+
+}
+
+.navbarlogo h1 {
+    margin: inherit;
+    margin-right: 5px;
+    font-size: 40px;
+}
+
+
+.navbar a:link {
+    text-decoration: none;
+}
+
+.navbar a:visited {
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: none;
+
+    color: black;
+    -webkit-text-stroke-width: 0.2px;
+    -webkit-text-stroke-color: white;
+}
+
+.navbar a:active {
+    text-decoration: none;
+}
+
+.navbar a {
+    font-size: 20px;
+    padding-right: 8px;
+    color: white;
+    background-color: orange;
+    -webkit-text-stroke-width: 0.2px;
+    -webkit-text-stroke-color: black;
+}
