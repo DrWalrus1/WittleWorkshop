@@ -15,8 +15,8 @@ pub fn tera_test() -> content::RawHtml<String> {
         }
     };
 
-    let mut context = tera::Context::new();
+    let context = tera::Context::new();
 
-    let mut renderResult = tera.render("index.html", &context).unwrap();
-    return content::RawHtml(renderResult);
+    let render_result = tera.render("index.html", &context).unwrap();
+    return content::RawHtml(render_result);
 }
