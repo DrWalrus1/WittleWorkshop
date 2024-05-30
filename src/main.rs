@@ -57,11 +57,7 @@ async fn rocket() -> _ {
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .mount("/docker/images", routes![routes::docker_routes::get_images])
-        .mount(
-            "/docker/containers",
-            routes![routes::docker_routes::get_containers],
-        )
+        .mount("/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
         .mount(
             "/services",
             routes![routes::service_routes::get_all_services],
