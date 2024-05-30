@@ -67,6 +67,6 @@ async fn rocket() -> _ {
             routes![routes::service_routes::get_all_services],
         )
         // .mount("/", rocket::fs::FileServer::from("../client/dist"))
-        .mount("/style", rocket::fs::FileServer::from("./style"))
+        .mount("/public", rocket::fs::FileServer::from("./public/"))
         .mount("/tera", routes![routes::tera_test])
 }
