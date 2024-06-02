@@ -1,9 +1,12 @@
 #[macro_use]
 extern crate rocket;
+use std::process;
+
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::yansi::Paint;
 use rocket::{Request, Response};
+use tera::Tera;
 use wittle_workshop_api::{routes, services, Config};
 
 pub struct CORS;
@@ -40,6 +43,14 @@ async fn rocket() -> _ {
     // let db_name = "Test";
     // let pool = services::connect_db(db_address, db_port, db_username, db_password, db_name).await;
 
+    let templates = match Tera::new("templates/**/*.html") {
+        Ok(t) => t,
+        Err(e) => {
+            println!("Parsing error(s): {}", e);
+            ::std::process::exit(1);
+        }
+    };
+
     let config: Config = Config {
         docker_socket_path: if let Ok(path) = std::env::var("DOCKER_SOCKET_PATH") {
             path
@@ -52,12 +63,13 @@ async fn rocket() -> _ {
             );
             String::from("/var/run/docker.sock")
         },
+        templates: templates,
         // db_pool: pool,
     };
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .mount("/", routes![routes::app_root])
+        .mount("/", routes![routes::app_root, routes::render_plan_page])
         .mount("/api/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
         .mount("/api/services", routes![routes::service_routes::get_all_services])
         .mount("/public", rocket::fs::FileServer::from("./public/"))

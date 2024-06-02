@@ -26,7 +26,8 @@
         </div>
     </header>
     <div id="content" class="content">
-        {% include "home.html" %}
+        {% block content %}
+        {% endblock content %}
     </div>
 </body>
 <script src="/public/js/test.js"></script>

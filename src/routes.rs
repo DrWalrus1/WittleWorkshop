@@ -1,22 +1,27 @@
 use rocket::{get, response::content};
-use tera::Tera;
+use tera::{Context, Tera};
+
+use crate::Config;
 
 pub mod docker_routes;
 pub mod service_routes;
 
 
 #[get("/")]
-pub fn app_root() -> content::RawHtml<String> {
-    let tera = match Tera::new("templates/**/*.html") {
-        Ok(t) => t,
-        Err(e) => {
-            println!("Parsing error(s): {}", e);
-            ::std::process::exit(1);
-        }
-    };
+pub fn app_root(state: &rocket::State<Config>) -> content::RawHtml<String> {
+    let tera: &Tera = &state.templates;
+    let context: Context = Context::new();
 
-    let context = tera::Context::new();
+    let render_result = tera.render("home.html", &context).unwrap();
+    return content::RawHtml(render_result);
+}
 
-    let render_result = tera.render("index.html", &context).unwrap();
+
+#[get("/plans")]
+pub fn render_plan_page(state: &rocket::State<Config>) -> content::RawHtml<String> {
+    let tera: &Tera = &state.templates;
+    let context: Context = Context::new();
+
+    let render_result = tera.render("plans.html", &context).unwrap();
     return content::RawHtml(render_result);
 }
