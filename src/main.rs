@@ -57,12 +57,8 @@ async fn rocket() -> _ {
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .mount("/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
-        .mount(
-            "/services",
-            routes![routes::service_routes::get_all_services],
-        )
-        // .mount("/", rocket::fs::FileServer::from("../client/dist"))
+        .mount("/", routes![routes::app_root])
+        .mount("/api/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
+        .mount("/api/services", routes![routes::service_routes::get_all_services])
         .mount("/public", rocket::fs::FileServer::from("./public/"))
-        .mount("/tera", routes![routes::tera_test])
 }
