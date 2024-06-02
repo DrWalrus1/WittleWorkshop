@@ -33,12 +33,12 @@ impl Fairing for CORS {
 
 #[launch]
 async fn rocket() -> _ {
-    let db_address = "127.0.0.1";
-    let db_port = "5432";
-    let db_username = "admin";
-    let db_password = "Password1";
-    let db_name = "Test";
-    let pool = services::connect_db(db_address, db_port, db_username, db_password, db_name).await;
+    // let db_address = "127.0.0.1";
+    // let db_port = "5432";
+    // let db_username = "admin";
+    // let db_password = "Password1";
+    // let db_name = "Test";
+    // let pool = services::connect_db(db_address, db_port, db_username, db_password, db_name).await;
 
     let config: Config = Config {
         docker_socket_path: if let Ok(path) = std::env::var("DOCKER_SOCKET_PATH") {
@@ -52,7 +52,7 @@ async fn rocket() -> _ {
             );
             String::from("/var/run/docker.sock")
         },
-        db_pool: pool,
+        // db_pool: pool,
     };
     rocket::build()
         .manage(config)
