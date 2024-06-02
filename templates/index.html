@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="stylesheet" href="/public/style/index.css" />
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+    <title>Wittle Workshop</title>
+</head>
+<body>
+    <header class='navbar'>
+        <div class='navbarItem'>
+            <a href='/' class="navbarlogo">
+                <h1>Wittle Workshop</h1>
+            </a>
+        </div>
+        <div class='navbarItem'>
+            <a href='/plans'>Plans</a>
+        </div>
+        <div class='navbarItem'>
+            <a href='/managedocker'>Manage Docker</a>
+        </div>
+        <div class='navbarItem'>
+            <a href='/manageservices'>Manage Services</a>
+        </div>
+    </header>
+    <div id="content" class="content">
+        {% include "home.html" %}
+    </div>
+</body>
+<script src="/public/js/test.js"></script>
+</html>

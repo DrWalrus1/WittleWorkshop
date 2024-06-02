@@ -9,6 +9,8 @@ pub enum ApiResponse<T> {
     Ok(Json<T>),
     #[response(status = 400, content_type = "json")]
     BadRequest(Json<T>),
+    #[response(status = 404, content_type = "json")]
+    NotFound(String),
     #[response(status = 500, content_type = "json")]
     ServerError(Json<T>),
 }
