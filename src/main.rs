@@ -2,6 +2,7 @@
 extern crate rocket;
 use std::process;
 
+use dockworker::Docker;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::yansi::Paint;
@@ -36,6 +37,13 @@ impl Fairing for CORS {
 
 #[launch]
 async fn rocket() -> _ {
+    let docker: Docker = match Docker::connect_with_defaults() {
+        Ok(docker) => docker,
+        Err(e) => {
+            println!("Error connecting to Docker: {}", e);
+            process::exit(1);
+        }
+    };
     // let db_address = "127.0.0.1";
     // let db_port = "5432";
     // let db_username = "admin";
@@ -64,6 +72,7 @@ async fn rocket() -> _ {
             String::from("/var/run/docker.sock")
         },
         templates: templates,
+        docker: docker,
         // db_pool: pool,
     };
     rocket::build()

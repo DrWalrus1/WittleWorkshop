@@ -1,45 +1,45 @@
 use crate::models::api_bodies::ApiResponse;
-use crate::services::docker_service;
 use crate::Config;
+use dockworker::image::SummaryImage;
+use dockworker::Docker;
 use rocket::{get, post};
 use rocket::serde::json::Json;
+use serde::Serialize;
 
 #[get("/<path>")]
-pub async fn docker_base_get(path: &str, state: &rocket::State<Config>) -> ApiResponse<Vec<String>> {
+pub async fn docker_base_get(path: &str, state: &rocket::State<Config>) -> ApiResponse<Vec<serde_json::Value>> {
     match path {
-        "images" => get_images(state).await,
-        "containers" => get_containers(state).await,
+        "images" => ApiResponse::Ok(Json(convert_to_json(get_images(state).await))),
+        "networks" => ApiResponse::Ok(Json(convert_to_json(get_networks(state).await))),
         _ => ApiResponse::NotFound("Invalid path".to_string()),
     }
 }
 
+fn convert_to_json<T: Serialize>(vec: Vec<T>) -> Vec<serde_json::Value> {
+    vec.into_iter().map(|i| serde_json::to_value(i).unwrap()).collect()
+}
+
 #[post("/<path>")]
-pub async fn docker_base_post(path: &str, state: &rocket::State<Config>) -> ApiResponse<Vec<String>> {
+pub async fn docker_base_post(path: &str, state: &rocket::State<Config>) -> ApiResponse<Vec<serde_json::Value>> {
     match path {
-        "images" => get_images(state).await,
-        "containers" => get_containers(state).await,
+        "images" => ApiResponse::Ok(Json(convert_to_json(get_images(state).await))),
+        "containers" => ApiResponse::Ok(Json(convert_to_json(get_networks(state).await))),
         _ => ApiResponse::NotFound("Invalid path".to_string()),
     }
 }
 
 // ----- IMAGES -----
-pub async fn get_images(state: &rocket::State<Config>) -> ApiResponse<Vec<String>> {
-    let images = docker_service::get_images_linux(&state.docker_socket_path)
-        .await
-        .unwrap();
-    // parse this string into a vector of strings
-    let images: Vec<String> = images.split('\n').map(|s| s.to_string()).collect();
+pub async fn get_images(state: &rocket::State<Config>) -> Vec<SummaryImage> {
+    let docker: &Docker = &state.docker;
+    let images = docker.images(true).await.unwrap();
 
-    ApiResponse::Ok(Json(images))
+    images
 }
 
 // ----- CONTAINERS -----
-pub async fn get_containers(state: &rocket::State<Config>) -> ApiResponse<Vec<String>> {
-    let containers = docker_service::get_containers_linux(&state.docker_socket_path)
-        .await
-        .unwrap();
-    // parse this string into a vector of strings
-    let containers: Vec<String> = containers.split('\n').map(|s| s.to_string()).collect();
+pub async fn get_networks(state: &rocket::State<Config>) -> Vec<dockworker::network::Network> {
+    let docker = &state.docker;
+    let networks = docker.list_networks(Default::default()).await.unwrap();
 
-    ApiResponse::Ok(Json(containers))
+    networks
 }
