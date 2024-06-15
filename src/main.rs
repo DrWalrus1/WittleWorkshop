@@ -5,7 +5,6 @@ use std::process;
 use dockworker::Docker;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
-use rocket::yansi::Paint;
 use rocket::{Request, Response};
 use tera::Tera;
 use wittle_workshop_api::{routes, Config};
@@ -58,11 +57,17 @@ async fn rocket() -> _ {
         docker: docker,
         // db_pool: pool,
     };
+
+    let docker_routes = routes![
+        routes::docker_routes::images::get_images,
+        routes::docker_routes::containers::get_containers,
+        routes::docker_routes::networks::get_networks];
+
     rocket::build()
         .manage(config)
         .attach(CORS)
         .mount("/", routes![routes::app_root, routes::render_plan_page])
-        .mount("/api/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
+        .mount("/api/docker", docker_routes)
         .mount("/api/services", routes![routes::service_routes::get_all_services])
         .mount("/public", rocket::fs::FileServer::from("./public/"))
 }
