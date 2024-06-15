@@ -8,7 +8,7 @@ use rocket::http::{Header, Method, Status};
 use rocket::yansi::Paint;
 use rocket::{Request, Response};
 use tera::Tera;
-use wittle_workshop_api::{routes, services, Config};
+use wittle_workshop_api::{routes, Config};
 
 pub struct CORS;
 
@@ -44,12 +44,6 @@ async fn rocket() -> _ {
             process::exit(1);
         }
     };
-    // let db_address = "127.0.0.1";
-    // let db_port = "5432";
-    // let db_username = "admin";
-    // let db_password = "Password1";
-    // let db_name = "Test";
-    // let pool = services::connect_db(db_address, db_port, db_username, db_password, db_name).await;
 
     let templates = match Tera::new("templates/**/*.html") {
         Ok(t) => t,
@@ -60,17 +54,6 @@ async fn rocket() -> _ {
     };
 
     let config: Config = Config {
-        docker_socket_path: if let Ok(path) = std::env::var("DOCKER_SOCKET_PATH") {
-            path
-        } else {
-            println!(
-                "{}",
-                "WARNING: DOCKER_SOCKET_PATH not set, using default path /var/run/docker.sock"
-                    .bold()
-                    .yellow()
-            );
-            String::from("/var/run/docker.sock")
-        },
         templates: templates,
         docker: docker,
         // db_pool: pool,
