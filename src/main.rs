@@ -1,10 +1,14 @@
 #[macro_use]
 extern crate rocket;
+use std::process;
+
+use dockworker::Docker;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
-use rocket::yansi::Paint;
 use rocket::{Request, Response};
-use wittle_workshop_api::{routes, services, Config};
+use tera::Tera;
+use wittle_workshop_api::routes::{docker_routes, html_routes};
+use wittle_workshop_api::{routes, Config};
 
 pub struct CORS;
 
@@ -33,36 +37,33 @@ impl Fairing for CORS {
 
 #[launch]
 async fn rocket() -> _ {
-    // let db_address = "127.0.0.1";
-    // let db_port = "5432";
-    // let db_username = "admin";
-    // let db_password = "Password1";
-    // let db_name = "Test";
-    // let pool = services::connect_db(db_address, db_port, db_username, db_password, db_name).await;
+    let docker: Docker = match Docker::connect_with_defaults() {
+        Ok(docker) => docker,
+        Err(e) => {
+            println!("Error connecting to Docker: {}", e);
+            process::exit(1);
+        }
+    };
+
+    let templates = match Tera::new("templates/**/*.html") {
+        Ok(t) => t,
+        Err(e) => {
+            println!("Parsing error(s): {}", e);
+            ::std::process::exit(1);
+        }
+    };
 
     let config: Config = Config {
-        docker_socket_path: if let Ok(path) = std::env::var("DOCKER_SOCKET_PATH") {
-            path
-        } else {
-            println!(
-                "{}",
-                "WARNING: DOCKER_SOCKET_PATH not set, using default path /var/run/docker.sock"
-                    .bold()
-                    .yellow()
-            );
-            String::from("/var/run/docker.sock")
-        },
+        templates: templates,
+        docker: docker,
         // db_pool: pool,
     };
+
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .mount("/docker", routes![routes::docker_routes::docker_base_get, routes::docker_routes::docker_base_post])
-        .mount(
-            "/services",
-            routes![routes::service_routes::get_all_services],
-        )
-        // .mount("/", rocket::fs::FileServer::from("../client/dist"))
+        .mount("/", html_routes::get_html_routes())
+        .mount("/api/docker", docker_routes::get_docker_routes())
+        .mount("/api/services", routes![routes::service_routes::get_all_services])
         .mount("/public", rocket::fs::FileServer::from("./public/"))
-        .mount("/tera", routes![routes::tera_test])
 }

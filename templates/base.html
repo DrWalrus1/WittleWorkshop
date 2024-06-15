@@ -6,7 +6,9 @@
     <meta name="theme-color" content="#000000" />
     <link rel="stylesheet" href="/public/style/index.css" />
     <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+    {% block page_title %}
     <title>Wittle Workshop</title>
+    {% endblock page_title %}
 </head>
 <body>
     <header class='navbar'>
@@ -26,7 +28,8 @@
         </div>
     </header>
     <div id="content" class="content">
-        {% include "home.html" %}
+        {% block content %}
+        {% endblock content %}
     </div>
 </body>
 <script src="/public/js/test.js"></script>

@@ -1,10 +1,11 @@
-use sqlx::{Pool, Postgres};
+use dockworker::Docker;
+use tera::Tera;
 
 pub mod models;
 pub mod routes;
-pub mod services;
+
 
 pub struct Config {
-    pub docker_socket_path: String,
-    // pub db_pool: Pool<Postgres>,
+    pub templates: Tera,
+    pub docker: Docker
 }

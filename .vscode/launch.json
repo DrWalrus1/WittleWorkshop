@@ -1,0 +1,102 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'wittle_workshop_api'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=wittle_workshop_api"
+                ],
+                "filter": {
+                    "name": "wittle_workshop_api",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'wittle_workshop_api'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=wittle_workshop_api",
+                    "--package=wittle_workshop_api"
+                ],
+                "filter": {
+                    "name": "wittle_workshop_api",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'wittle_workshop_api'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=wittle_workshop_api",
+                    "--package=wittle_workshop_api"
+                ],
+                "filter": {
+                    "name": "wittle_workshop_api",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'docker_routes'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=docker_routes",
+                    "--package=wittle_workshop_api"
+                ],
+                "filter": {
+                    "name": "docker_routes",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'database_test'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=database_test",
+                    "--package=wittle_workshop_api"
+                ],
+                "filter": {
+                    "name": "database_test",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
