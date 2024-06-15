@@ -1,3 +1,11 @@
+use rocket::routes;
+
+pub fn get_docker_routes() -> Vec<rocket::Route> {
+    routes![
+        images::get_images,
+        containers::get_containers,
+        networks::get_networks]
+}
 pub mod images {
     use dockworker::{image::SummaryImage, Docker};
     use rocket::{get, serde::json::Json};
