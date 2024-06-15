@@ -54,8 +54,8 @@ async fn rocket() -> _ {
     };
 
     let config: Config = Config {
-        templates: templates,
-        docker: docker,
+        templates,
+        docker,
         // db_pool: pool,
     };
 
