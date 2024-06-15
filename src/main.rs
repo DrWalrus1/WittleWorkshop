@@ -66,7 +66,7 @@ async fn rocket() -> _ {
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .mount("/", routes![routes::app_root, routes::render_plan_page])
+        .mount("/", routes![routes::app_root, routes::render_plan_page, routes::docker_page])
         .mount("/api/docker", docker_routes)
         .mount("/api/services", routes![routes::service_routes::get_all_services])
         .mount("/public", rocket::fs::FileServer::from("./public/"))
