@@ -6,7 +6,8 @@ pub fn get_html_routes() -> Vec<rocket::Route> {
     routes![
         app_root,
         docker_page,
-        render_plan_page
+        render_plan_page,
+        test_htmx
     ]
 }
 
@@ -36,4 +37,9 @@ pub fn render_plan_page(state: &rocket::State<Config>) -> content::RawHtml<Strin
 
     let render_result = tera.render("plans.html", &context).unwrap();
     return content::RawHtml(render_result);
+}
+
+#[get("/testhtmx", format = "text/html")]
+pub fn test_htmx() -> content::RawHtml<String>{
+    content::RawHtml(String::from("<div id='test' hx-get='/testhtmx'>Hello, World!</div>"))
 }

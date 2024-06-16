@@ -7,7 +7,7 @@ use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::{Request, Response};
 use tera::Tera;
-use wittle_workshop_api::routes::{docker_routes, html_routes};
+use wittle_workshop_api::routes::*;
 use wittle_workshop_api::{routes, Config};
 
 pub struct CORS;
@@ -62,6 +62,8 @@ async fn rocket() -> _ {
     rocket::build()
         .manage(config)
         .attach(CORS)
+        .register("/", catchers![route_catchers::base::internal_error, route_catchers::base::not_found])
+        .register("/api", catchers![route_catchers::api::internal_error_api, route_catchers::api::not_found_api])
         .mount("/", html_routes::get_html_routes())
         .mount("/api/docker", docker_routes::get_docker_routes())
         .mount("/api/services", routes![routes::service_routes::get_all_services])
