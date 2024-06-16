@@ -1,11 +1,13 @@
 #[macro_use]
 extern crate rocket;
-use std::process;
-
 use dockworker::Docker;
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::{Request, Response};
+use std::path::Path;
+use std::sync::{Arc, Mutex};
+use std::{process, thread};
 use tera::Tera;
 use wittle_workshop_api::routes::*;
 use wittle_workshop_api::{routes, Config};
@@ -46,12 +48,14 @@ async fn rocket() -> _ {
     };
 
     let templates = match Tera::new("templates/**/*.html") {
-        Ok(t) => t,
+        Ok(t) => Arc::new(Mutex::new(t)),
         Err(e) => {
             println!("Parsing error(s): {}", e);
             ::std::process::exit(1);
         }
     };
+    
+    setup_template_watcher(&templates);
 
     let config: Config = Config {
         templates,
@@ -62,10 +66,44 @@ async fn rocket() -> _ {
     rocket::build()
         .manage(config)
         .attach(CORS)
-        .register("/", catchers![route_catchers::base::internal_error, route_catchers::base::not_found])
-        .register("/api", catchers![route_catchers::api::internal_error_api, route_catchers::api::not_found_api])
+        .register(
+            "/",
+            catchers![
+                route_catchers::base::internal_error,
+                route_catchers::base::not_found
+            ],
+        )
+        .register(
+            "/api",
+            catchers![
+                route_catchers::api::internal_error_api,
+                route_catchers::api::not_found_api
+            ],
+        )
         .mount("/", html_routes::get_html_routes())
         .mount("/api/docker", docker_routes::get_docker_routes())
-        .mount("/api/services", routes![routes::service_routes::get_all_services])
+        .mount(
+            "/api/services",
+            routes![routes::service_routes::get_all_services],
+        )
         .mount("/public", rocket::fs::FileServer::from("./public/"))
+}
+
+fn setup_template_watcher(template_ref: &Arc<Mutex<Tera>>) {
+    let template_clone = Arc::clone(&template_ref);
+    thread::spawn(move || {
+        let (tx, rx) = std::sync::mpsc::channel();
+        let path = Path::new("./templates/");
+        let mut watcher = RecommendedWatcher::new(tx, notify::Config::default()).unwrap();
+        watcher.watch(&path, RecursiveMode::Recursive).unwrap();
+
+        for res in rx {
+            match res {
+                Ok(_) => {
+                    template_clone.lock().unwrap().full_reload().unwrap();
+                }
+                Err(e) => println!("watch error: {:?}", e),
+            }
+        }
+    });
 }

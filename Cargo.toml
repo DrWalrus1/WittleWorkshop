@@ -27,3 +27,4 @@ serde_json = "1.0"
 thiserror = "1.0.58"
 tera = "1.20.0"
 dockworker = { git = "https://github.com/DrWalrus1/dockworker.git" }
+notify = { version = "6.1.1" }
