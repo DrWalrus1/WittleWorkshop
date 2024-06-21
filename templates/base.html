@@ -3,36 +3,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/public/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon/favicon-16x16.png">
+    <meta name="theme-color" content="#51087E" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/favicon/text/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon/text/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon/text/favicon-16x16.png">
     <link rel="manifest" href="/public/favicon/site.webmanifest">
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
     {% block style_tags %}
     <link rel="stylesheet" href="/public/style/index.css" />
+    <link rel="stylesheet" href="/public/style/header.css" />
     {% endblock style_tags %}
-    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
     {% block page_title %}
     <title>Wittle Workshop</title>
     {% endblock page_title %}
 </head>
 <body>
-    <header class='navbar'>
-        <div class='navbarItem'>
-            <a href='/' class="navbarlogo">
-                <h1>Wittle Workshop</h1>
-            </a>
-        </div>
-        <div class='navbarItem'>
-            <a href='/plans'>Plans</a>
-        </div>
-        <div class='navbarItem'>
-            <a href='/managedocker'>Manage Docker</a>
-        </div>
-        <div class='navbarItem'>
-            <a href='/manageservices'>Manage Services</a>
-        </div>
-    </header>
+    {% include "components/header.html" %}
     <div id="content" class="content">
         {% block content %}
         {% endblock content %}

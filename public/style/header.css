@@ -1,0 +1,21 @@
+@import "core.css";
+
+
+.header {
+    background-color: grey;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+
+.header-left {
+    grid-column: 1/2;
+}
+
+.header-right {
+    grid-column: 3/5;
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+}

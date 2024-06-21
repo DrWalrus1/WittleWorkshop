@@ -54,7 +54,7 @@ async fn rocket() -> _ {
             ::std::process::exit(1);
         }
     };
-    
+
     setup_template_watcher(&templates);
 
     let config: Config = Config {

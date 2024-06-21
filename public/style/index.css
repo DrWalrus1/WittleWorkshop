@@ -1,13 +1,4 @@
-:root {
-    --orange: #FD7F20;
-    --crimson: #990000;
-    --orange-red: #FC2E20;
-    --amber: #fdc97a;
-    --black: #010100;
-    --white: #ffffff;
-    --purple: #51087E;
-    --purple-shadow: #6a5477;
-  }
+@import "core.css";
 
 body {
     margin: 0;
@@ -54,7 +45,7 @@ code {
     margin-left: 20px;
     width: 100%;
     -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-color: var(--black);
 }
 
 .navbarlogo {
