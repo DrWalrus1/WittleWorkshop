@@ -13,7 +13,7 @@
 <div>
     <h1>Manage Docker</h1>
     <p>Welcome to the Wittle Workshop! Here you can find a variety of tools and resources to help you manage your Docker containers and services. Click on the links above to get started!</p>
-    <div class="content-grid">
+    <div class="container-grid">
         {% for a in [1,2,3,4] %}
         <div class="grid-test {{ 'grid-column-' ~ a }}">
             {% include "components/DockerContainerView.html" %}

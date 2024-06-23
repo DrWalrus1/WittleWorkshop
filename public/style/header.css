@@ -1,0 +1,42 @@
+@import "core.css";
+
+.header {
+    background-color: grey;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    border-radius: 0px 0px 3px 3px;
+    padding: 0.25rem 1rem 0.25rem 1rem;
+}
+
+.header h1 {
+    margin: auto;
+}
+
+.header a,
+a:hover,
+a:focus,
+a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.header-logo-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.header-left {
+    grid-column: 1/2;
+}
+
+.header-right {
+    grid-column: 3/5;
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+}

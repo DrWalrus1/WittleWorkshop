@@ -4,10 +4,10 @@ COPY ./ /api
 
 WORKDIR /api
 
-RUN cargo build
+RUN cargo build --release
 
 ENV ROCKET_PROFILE=release
 
 EXPOSE 8000
 
-CMD ["cargo", "run"]
+CMD ["cargo", "run", "--release"]
